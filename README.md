@@ -20,8 +20,7 @@ composer require marcelonees/ttinymceadianti dev-main
 Uso:
 
 ```php
-use MarceloNees\Plugins\TinyMCE\TTinyMceEditor;
-
+use MarceloNees\TTinyMceAdianti\TTinyMceEditor;
 $editor = new TTinyMceEditor('editor');
 ```
 

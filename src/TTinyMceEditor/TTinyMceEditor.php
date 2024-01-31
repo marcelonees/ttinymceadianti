@@ -1,6 +1,6 @@
 <?php
 
-namespace Adianti\Widget\Form;
+namespace MarceloNees\TTinyMceAdianti\TTinyMceEditor;
 
 use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
