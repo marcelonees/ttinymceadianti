@@ -43,15 +43,17 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         $this->tag = new TElement('textarea');
         $this->tag->{'widget'} = 'ttinymceeditor';
 
-        TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/content.min.css');
-        TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/content.css');
-        TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js');
+        // TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/content.min.css');
+        // TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/content.css');
+        // TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js');
+        TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/ckeditor.js');
 
-        TScript::create("
-            tinymce.init({
-                selector: '#{$this->id}'
-            });
-        ");
+
+        // TScript::create("
+        //     tinymce.init({
+        //         selector: '#{$this->id}'
+        //     });
+        // ");
     }
 
     /**
