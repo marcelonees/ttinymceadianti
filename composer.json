@@ -1,6 +1,6 @@
 {
-    "name": "marcelonees/plugins",
-    "description": "Plugins for Adianti Framework",
+    "name": "marcelonees/ttinymceadianti",
+    "description": "TTinyMceEditor for Adianti Framework",
     "type": "library",
     "license": "MIT",
     "authors": [
