@@ -20,9 +20,9 @@ composer require marcelonees/plugins dev-main
 Uso:
 
 ```php
-use MarceloNees\Plugins\TTinyMCE\TTinyMCE;
+use MarceloNees\Plugins\TinyMCE\TTinyMceEditor;
 
-$editor = new TTinyMCE('editor');
+$editor = new TTinyMceEditor('editor');
 ```
 
 # Este projeto está em estágio "embrionário".
