@@ -54,14 +54,6 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         //         selector: '#{$this->id}'
         //     });
         // ");
-
-        TScript::create("
-            ClassicEditor
-                .create( document.querySelector( '#{$this->id}' ) )
-                .catch( error => {
-                    console.error( error );
-                } );
-        ");
     }
 
     /**
@@ -227,8 +219,17 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
 
         $options_json = json_encode($options);
         $buttons_json = json_encode($this->customButtons);
-        TScript::create(" ttinymceeditor_start( '{$this->tag->{'id'}}', '{$this->size}', '{$this->height}', '{$locale}', '{$options_json}', '{$buttons_json}' ); ");
-        TScript::create(" $('#{$this->tag->id}').parent().show();");
+        // TScript::create(" ttinymceeditor_start( '{$this->tag->{'id'}}', '{$this->size}', '{$this->height}', '{$locale}', '{$options_json}', '{$buttons_json}' ); ");
+        // TScript::create(" $('#{$this->tag->id}').parent().show();");
+
+
+        TScript::create("
+            ClassicEditor
+                .create( document.querySelector( '#{$this->id}' ) )
+                .catch( error => {
+                    console.error( error );
+                } );
+        ");
 
         // check if the field is not editable
         if (!parent::getEditable()) {
