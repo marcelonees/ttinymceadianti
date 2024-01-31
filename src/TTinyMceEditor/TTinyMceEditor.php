@@ -7,6 +7,7 @@ use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
+use Adianti\Widget\Base\TStyle;
 use Adianti\Widget\Form\TField;
 use Adianti\Widget\Util\TImage;
 
