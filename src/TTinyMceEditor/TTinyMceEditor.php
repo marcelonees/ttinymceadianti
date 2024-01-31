@@ -54,6 +54,14 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         //         selector: '#{$this->id}'
         //     });
         // ");
+
+        TScript::create("
+            ClassicEditor
+                .create( document.querySelector( '#{$this->id}' ) )
+                .catch( error => {
+                    console.error( error );
+                } );
+        ");
     }
 
     /**
