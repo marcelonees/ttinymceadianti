@@ -13,8 +13,8 @@ Instalação:
 
 ```bash
 composer config repositories.ttinymceadianti vcs https://github.com/marcelonees/ttinymceadianti
-composer require marcelonees/plugins @dev
-composer require marcelonees/plugins dev-main
+composer require marcelonees/ttinymceadianti @dev
+composer require marcelonees/ttinymceadianti dev-main
 ```
 
 Uso:
