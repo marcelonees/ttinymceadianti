@@ -12,7 +12,7 @@ Site do fabricante [Tiny](https://www.tiny.cloud/).
 Instalação:
 
 ```bash
-composer config repositories.openlayers vcs https://github.com/marcelonees/ttinymceadianti
+composer config repositories.ttinymceadianti vcs https://github.com/marcelonees/ttinymceadianti
 composer require marcelonees/plugins @dev
 composer require marcelonees/plugins dev-main
 ```
