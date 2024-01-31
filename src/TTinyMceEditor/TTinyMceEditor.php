@@ -46,6 +46,12 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/content.min.css');
         TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/content.css');
         TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js');
+
+        TScript::create("
+            tinymce.init({
+                selector: '#{$this->id}'
+            });
+        ");
     }
 
     /**
