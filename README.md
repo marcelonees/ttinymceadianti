@@ -3,11 +3,11 @@
 Use um editor WYSIWYG com mais recursos que o THtmlEditor
 
 Segundo o fabricante:
-`
-Install TinyMCE to add a fully-featured, sleek and intuitive
-rich text editor to your app – in just a few lines of code.
-Url: https://www.tiny.cloud/
-`
+
+> Install TinyMCE to add a fully-featured, sleek and intuitive
+> rich text editor to your app – in just a few lines of code.
+
+Site do fabricante [Tiny](https://www.tiny.cloud/).
 
 Instalação:
 
