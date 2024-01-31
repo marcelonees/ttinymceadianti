@@ -2,6 +2,7 @@
 
 namespace MarceloNees\TTinyMceAdianti\TTinyMceEditor;
 
+use MarceloNees\Plugins\OpenLayers\OpenLayersMap;
 use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
@@ -42,9 +43,9 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         $this->tag = new TElement('textarea');
         $this->tag->{'widget'} = 'ttinymceeditor';
 
-        TStyle::importFromFile('vendor/marcelonees/plugins/src/TTinyMceEditor/tinymce.min.css');
-        TStyle::importFromFile('vendor/marcelonees/plugins/src/TTinyMceEditor/tinymce.css');
-        TScript::importFromFile('vendor/marcelonees/plugins/src/TTinyMceEditor/tinymce.js');
+        TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.css');
+        TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.css');
+        TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.js');
     }
 
     /**
