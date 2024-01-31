@@ -1,6 +1,6 @@
 <?php
 
-namespace MarceloNees\TTinyMceAdianti\TTinyMceEditor;
+namespace MarceloNees\TTinyMceAdianti;
 
 use MarceloNees\Plugins\OpenLayers\OpenLayersMap;
 use Adianti\Core\AdiantiApplicationConfig;
