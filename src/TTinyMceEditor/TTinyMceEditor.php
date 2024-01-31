@@ -2,7 +2,6 @@
 
 namespace MarceloNees\TTinyMceAdianti;
 
-use MarceloNees\Plugins\OpenLayers\OpenLayersMap;
 use Adianti\Core\AdiantiApplicationConfig;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
@@ -36,10 +35,10 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
     public function __construct($name)
     {
         parent::__construct($name);
-        $this->id = 'TTinyMceEditor_' . mt_rand(1000000000, 1999999999);
-        $this->toolbar = true;
-        $this->options = [];
-        $this->customButtons = [];
+        $this->id               = 'TTinyMceEditor_' . mt_rand(1000000000, 1999999999);
+        $this->toolbar          = true;
+        $this->options          = [];
+        $this->customButtons    = [];
         // creates a tag
         $this->tag = new TElement('textarea');
         $this->tag->{'widget'} = 'ttinymceeditor';
