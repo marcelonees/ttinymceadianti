@@ -43,17 +43,26 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         $this->tag = new TElement('textarea');
         $this->tag->{'widget'} = 'ttinymceeditor';
 
-        // TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/content.min.css');
-        // TStyle::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/content.css');
-        // TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js');
-        TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/ckeditor.js');
+        TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce/tinymce.min.js');
 
-
-        // TScript::create("
-        //     tinymce.init({
-        //         selector: '#{$this->id}'
-        //     });
-        // ");
+        TScript::create("
+            tinymce.init({
+                    selector: '#{$this->id}',
+                    inline: false,
+                    plugins: 'powerpaste advcode table lists checklist',
+                    toolbar: 'styles | bold italic | bullist numlist checklist | image | table | alignleft aligncenter alignright alignjustify | outdent indent',
+                    language: 'pt_BR',
+                    directionality: 'ltr',
+                    menubar: '',
+                    branding: false,
+                    promotion: false,
+                    force_br_newlines: true,
+                    min_height: 100,
+                    height: 400,
+                    content_css: 'writer',
+                    statusbar: false
+            });
+        ");
     }
 
     /**
@@ -224,11 +233,14 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
 
 
         TScript::create("
-            ClassicEditor
-                .create( document.querySelector( '#{$this->id}' ) )
-                .catch( error => {
-                    console.error( error );
-                } );
+            $.getScript('vendor/marcelonees/plugins/src/OpenLayers/ol.js', {'crossOrigin': 'anonymous', 'crossDomain': 'true',}).done(function(s, Status) {
+                ClassicEditor
+                    .create( document.querySelector( '#{$this->id}' ) )
+                    .catch( error => {
+                        console.error( error );
+                    } 
+                );
+            }
         ");
 
         // check if the field is not editable
