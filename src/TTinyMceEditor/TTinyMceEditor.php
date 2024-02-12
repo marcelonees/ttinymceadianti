@@ -43,26 +43,26 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         $this->tag = new TElement('textarea');
         $this->tag->{'widget'} = 'ttinymceeditor';
 
-        TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce/tinymce.min.js');
+        // TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce/tinymce.min.js');
 
-        TScript::create("
-            tinymce.init({
-                    selector: '#{$this->id}',
-                    inline: false,
-                    plugins: 'powerpaste advcode table lists checklist',
-                    toolbar: 'styles | bold italic | bullist numlist checklist | image | table | alignleft aligncenter alignright alignjustify | outdent indent',
-                    language: 'pt_BR',
-                    directionality: 'ltr',
-                    menubar: '',
-                    branding: false,
-                    promotion: false,
-                    force_br_newlines: true,
-                    min_height: 100,
-                    height: 400,
-                    content_css: 'writer',
-                    statusbar: false
-            });
-        ");
+        // TScript::create("
+        //     tinymce.init({
+        //         selector: '#{$this->id}',
+        //         inline: false,
+        //         plugins: 'powerpaste advcode table lists checklist',
+        //         toolbar: 'styles | bold italic | bullist numlist checklist | image | table | alignleft aligncenter alignright alignjustify | outdent indent',
+        //         language: 'pt_BR',
+        //         directionality: 'ltr',
+        //         menubar: '',
+        //         branding: false,
+        //         promotion: false,
+        //         force_br_newlines: true,
+        //         min_height: 100,
+        //         height: 400,
+        //         content_css: 'writer',
+        //         statusbar: false
+        //     });
+        // ");
     }
 
     /**
@@ -232,15 +232,40 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         // TScript::create(" $('#{$this->tag->id}').parent().show();");
 
 
+        // $.getScript('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js', {'crossOrigin': 'anonymous', 'crossDomain': 'true',})
+
+        // inline: false,
+        // plugins: 'powerpaste advcode table lists checklist',
+        // toolbar: 'styles | bold italic | bullist numlist checklist | image | table | alignleft aligncenter alignright alignjustify | outdent indent',
+        // language: 'pt_BR',
+        // directionality: 'ltr',
+        // menubar: '',
+        // branding: false,
+        // promotion: false,
+        // force_br_newlines: true,
+        // min_height: 100,
+        // height: 400,
+        // content_css: 'writer',
+        // statusbar: false
+
+
         TScript::create("
-            $.getScript('vendor/marcelonees/plugins/src/OpenLayers/ol.js', {'crossOrigin': 'anonymous', 'crossDomain': 'true',}).done(function(s, Status) {
-                ClassicEditor
-                    .create( document.querySelector( '#{$this->id}' ) )
-                    .catch( error => {
-                        console.error( error );
-                    } 
-                );
-            }
+            $.getScript('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js', {})            
+                .done(function(s, Status) {
+
+                    console.log('Carregou: ' + Status);
+
+                    tinymce.init({
+                        selector: 'textarea#{$this->id}',
+                    });                    
+
+                })
+                .fail(function( jqxhr, settings, exception ) {
+
+                    console.log('Error: ' + exception);
+                    
+                });
+
         ");
 
         // check if the field is not editable
