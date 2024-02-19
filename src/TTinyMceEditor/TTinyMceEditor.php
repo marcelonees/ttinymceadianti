@@ -2,7 +2,9 @@
 
 namespace MarceloNees\TTinyMceAdianti\TTinyMceEditor;
 
+use Adianti\Control\TPage;
 use Adianti\Core\AdiantiApplicationConfig;
+use Adianti\Database\TTransaction;
 use Adianti\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Widget\Base\TElement;
 use Adianti\Widget\Base\TScript;
@@ -26,7 +28,11 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
     protected $customButtons;
     protected $completion;
     protected $options;
-    private   $height;
+    protected $height;
+
+    protected $card_items;
+    protected $image_list;
+
 
     /**
      * Class Constructor
@@ -35,156 +41,165 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
     public function __construct($name)
     {
         parent::__construct($name);
+
+        TPage::include_js('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js');
+        TPage::include_js('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/ttinymceeditor.js');
+
         $this->id               = 'TTinyMceEditor_' . mt_rand(1000000000, 1999999999);
         $this->toolbar          = true;
         $this->options          = [];
         $this->customButtons    = [];
+        $this->card_items       = [];
+        $this->image_list       = [];
+
         // creates a tag
         $this->tag = new TElement('textarea');
         $this->tag->{'widget'} = 'ttinymceeditor';
-
-        // TScript::importFromFile('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce/tinymce.min.js');
-
-        // TScript::create("
-        //     tinymce.init({
-        //         selector: '#{$this->id}',
-        //         inline: false,
-        //         plugins: 'powerpaste advcode table lists checklist',
-        //         toolbar: 'styles | bold italic | bullist numlist checklist | image | table | alignleft aligncenter alignright alignjustify | outdent indent',
-        //         language: 'pt_BR',
-        //         directionality: 'ltr',
-        //         menubar: '',
-        //         branding: false,
-        //         promotion: false,
-        //         force_br_newlines: true,
-        //         min_height: 100,
-        //         height: 400,
-        //         content_css: 'writer',
-        //         statusbar: false
-        //     });
-        // ");
     }
+
+    // /**
+    //  * Define max length
+    //  * @param  $length Max length
+    //  */
+    // public function setMaxLength($length)
+    // {
+    //     if ($length > 0) {
+    //         $this->options['maxlength'] = $length;
+    //     }
+    // }
+
+    // /**
+    //  * Set extra calendar options
+    //  * @link https://summernote.org/deep-dive/
+    //  */
+    // public function setOption($option, $value)
+    // {
+    //     $this->options[$option] = $value;
+    // }
+
+    // /**
+    //  * Add custom button
+    //  *
+    //  * @link https://summernote.org/deep-dive/#custom-button
+    //  * @param $name     String  name action
+    //  * @param $function String  function(context){  }
+    //  * @param $title    String  title icon
+    //  * @param $icon     TImage  toolbar icon
+    //  */
+    // public function addCustomButton($name, $function, $title, TImage $icon, $showLabel = false)
+    // {
+    //     $this->customButtons[] = [
+    //         'name'      => $name,
+    //         'function'  => base64_encode($function),
+    //         'title'     => base64_encode($title),
+    //         'showLabel' => $showLabel,
+    //         'icon'      => base64_encode($icon->getContents()),
+    //     ];
+    // }
+
+    // /**
+    //  * Define the widget's size
+    //  * @param  $width   Widget's width
+    //  * @param  $height  Widget's height
+    //  */
+    // public function setSize($width, $height = NULL)
+    // {
+    //     $this->size   = $width;
+    //     if ($height) {
+    //         $this->height = $height;
+    //     }
+    // }
+
+    // /**
+    //  * Returns the size
+    //  * @return array(width, height)
+    //  */
+    // public function getSize()
+    // {
+    //     return array($this->size, $this->height);
+    // }
+
+    // /**
+    //  * Disable toolbar
+    //  */
+    // public function disableToolbar()
+    // {
+    //     $this->toolbar = false;
+    // }
+
+    // /**
+    //  * Define options for completion
+    //  * @param $options array of options for completion
+    //  */
+    // function setCompletion($options)
+    // {
+    //     $this->completion = $options;
+    // }
+
+    // /**
+    //  * Enable the field
+    //  * @param $form_name Form name
+    //  * @param $field Field name
+    //  */
+    // public static function enableField($form_name, $field)
+    // {
+    //     TScript::create(" ttinymceeditor_enable_field('{$form_name}', '{$field}'); ");
+    // }
+
+    // /**
+    //  * Disable the field
+    //  * @param $form_name Form name
+    //  * @param $field Field name
+    //  */
+    // public static function disableField($form_name, $field)
+    // {
+    //     TScript::create(" ttinymceeditor_disable_field('{$form_name}', '{$field}'); ");
+    // }
+
+    // /**
+    //  * Clear the field
+    //  * @param $form_name Form name
+    //  * @param $field Field name
+    //  */
+    // public static function clearField($form_name, $field)
+    // {
+    //     TScript::create(" ttinymceeditor_clear_field('{$form_name}', '{$field}'); ");
+    // }
+
+    // /**
+    //  * Reload completion
+    //  * 
+    //  * @param $field Field name or id
+    //  * @param $options array of options for autocomplete
+    //  */
+    // public static function reloadCompletion($field, $options)
+    // {
+    //     $options = json_encode($options);
+    //     TScript::create(" ttinymceeditor_insert_text_editor_reload_completion( '{$field}', $options); ");
+    // }
+
 
     /**
-     * Define max length
-     * @param  $length Max length
+     * Set card_items
+     * @param $card_items Json Object
      */
-    public function setMaxLength($length)
+    public function setCardItems($card_items)
     {
-        if ($length > 0) {
-            $this->options['maxlength'] = $length;
-        }
+        $this->card_items = $card_items;
+        TScript::create(" ttinymceeditor_set_card_items($card_items)");
     }
 
-    /**
-     * Set extra calendar options
-     * @link https://summernote.org/deep-dive/
-     */
-    public function setOption($option, $value)
-    {
-        $this->options[$option] = $value;
-    }
 
     /**
-     * Add custom button
-     *
-     * @link https://summernote.org/deep-dive/#custom-button
-     * @param $name     String  name action
-     * @param $function String  function(context){  }
-     * @param $title    String  title icon
-     * @param $icon     TImage  toolbar icon
+     * Set image_list
+     * @param $image_list Json Object
      */
-    public function addCustomButton($name, $function, $title, TImage $icon, $showLabel = false)
+    public function setImageList($image_list)
     {
-        $this->customButtons[] = [
-            'name' => $name,
-            'function' => base64_encode($function),
-            'title' => base64_encode($title),
-            'showLabel' => $showLabel,
-            'icon' => base64_encode($icon->getContents()),
-        ];
+        $this->image_list = $image_list;
+        TScript::create(" ttinymceeditor_set_image_list($image_list)");
     }
 
-    /**
-     * Define the widget's size
-     * @param  $width   Widget's width
-     * @param  $height  Widget's height
-     */
-    public function setSize($width, $height = NULL)
-    {
-        $this->size   = $width;
-        if ($height) {
-            $this->height = $height;
-        }
-    }
-
-    /**
-     * Returns the size
-     * @return array(width, height)
-     */
-    public function getSize()
-    {
-        return array($this->size, $this->height);
-    }
-
-    /**
-     * Disable toolbar
-     */
-    public function disableToolbar()
-    {
-        $this->toolbar = false;
-    }
-
-    /**
-     * Define options for completion
-     * @param $options array of options for completion
-     */
-    function setCompletion($options)
-    {
-        $this->completion = $options;
-    }
-
-    /**
-     * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
-     */
-    public static function enableField($form_name, $field)
-    {
-        TScript::create(" ttinymceeditor_enable_field('{$form_name}', '{$field}'); ");
-    }
-
-    /**
-     * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
-     */
-    public static function disableField($form_name, $field)
-    {
-        TScript::create(" ttinymceeditor_disable_field('{$form_name}', '{$field}'); ");
-    }
-
-    /**
-     * Clear the field
-     * @param $form_name Form name
-     * @param $field Field name
-     */
-    public static function clearField($form_name, $field)
-    {
-        TScript::create(" ttinymceeditor_clear_field('{$form_name}', '{$field}'); ");
-    }
-
-    /**
-     * Reload completion
-     * 
-     * @param $field Field name or id
-     * @param $options array of options for autocomplete
-     */
-    public static function reloadCompletion($field, $options)
-    {
-        $options = json_encode($options);
-        TScript::create(" thtml_editor_reload_completion( '{$field}', $options); ");
-    }
 
     /**
      * Insert text
@@ -197,17 +212,15 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         TScript::create(" ttinymceeditor_insert_text('{$form_name}', '{$field}', '{$content}'); ");
     }
 
+
     /**
      * Show the widget
      */
     public function show()
     {
-        $this->tag->{'id'} = $this->id;
-        $this->tag->{'class'}  = 'thtmleditor';       // CSS
-        $this->tag->{'name'}   = $this->name;   // tag name
-
-        $ini = AdiantiApplicationConfig::get();
-        $locale = !empty($ini['general']['locale']) ? $ini['general']['locale'] : 'pt-BR';
+        $this->tag->{'id'}    = $this->id;
+        $this->tag->{'class'} = 'ttinymceeditor';    // CSS
+        $this->tag->{'name'}  = $this->name;         // tag name
 
         // add the content to the textarea
         $this->tag->add(htmlspecialchars((string) $this->value));
@@ -222,55 +235,38 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         if (!$this->toolbar) {
             $options['airMode'] = true;
         }
+
         if (!empty($this->completion)) {
             $options['completion'] = $this->completion;
         }
 
         $options_json = json_encode($options);
         $buttons_json = json_encode($this->customButtons);
-        // TScript::create(" ttinymceeditor_start( '{$this->tag->{'id'}}', '{$this->size}', '{$this->height}', '{$locale}', '{$options_json}', '{$buttons_json}' ); ");
-        // TScript::create(" $('#{$this->tag->id}').parent().show();");
 
+        // TinyMCE usa pt_BR ao invés de pt-BR
+        $ini    = AdiantiApplicationConfig::get();
+        $locale = !empty($ini['general']['locale']) ? $ini['general']['locale'] : 'pt-BR';
+        $locale = str_replace('-', '_', $locale);
 
-        // $.getScript('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js', {'crossOrigin': 'anonymous', 'crossDomain': 'true',})
-
-        // inline: false,
-        // plugins: 'powerpaste advcode table lists checklist',
-        // toolbar: 'styles | bold italic | bullist numlist checklist | image | table | alignleft aligncenter alignright alignjustify | outdent indent',
-        // language: 'pt_BR',
-        // directionality: 'ltr',
-        // menubar: '',
-        // branding: false,
-        // promotion: false,
-        // force_br_newlines: true,
-        // min_height: 100,
-        // height: 400,
-        // content_css: 'writer',
-        // statusbar: false
-
-
-        TScript::create("
-            $.getScript('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js', {})            
-                .done(function(s, Status) {
-
-                    console.log('Carregou: ' + Status);
-
-                    tinymce.init({
-                        selector: 'textarea#{$this->id}',
-                    });                    
-
-                })
-                .fail(function( jqxhr, settings, exception ) {
-
-                    console.log('Error: ' + exception);
-                    
-                });
-
+        // Inicia o TinyMCE
+        TScript::create(" 
+            ttinymceeditor_start( 
+                '{$this->tag->{'id'}}',
+                '{$this->size}',
+                '{$this->height}',
+                '{$locale}',
+                '{$options_json}', 
+                '{$buttons_json}'
+            );
         ");
 
-        // check if the field is not editable
-        if (!parent::getEditable()) {
-            TScript::create(" ttinymceeditor_disable_field('{$this->formName}', '{$this->name}'); ");
-        }
+        // Sugestões de autocomplete
+        TScript::create(" ttinymceeditor_set_card_items({$this->card_items})");
+
+        // Lista de imagens disponíveis em Inserir/Editar imagem
+        TScript::create(" ttinymceeditor_set_image_list({$this->image_list})");
+
+        // Mostra o editor na tela
+        TScript::create(" $('#{$this->tag->id}').parent().show();");
     }
 }
