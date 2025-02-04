@@ -2,22 +2,66 @@
     /**
      * Variáveis globais de configuração
      */
+    var height = 600;
+
     var card_items = [];
 
     var image_list = [];
+
+    var template_list = [];
+    
+    style_formats = [
+        
+        {
+            title: 'Cabeçalho e rodapé', items: [
+                { title: 'Cabeçalho', block: 'header' },
+                { title: 'Rodapé', block: 'footer' }
+            ]
+        },
+        /*  
+        {
+            title: 'Headers', items: [
+                { title: 'h1', block: 'h1' },
+                { title: 'h2', block: 'h2' },
+                { title: 'h3', block: 'h3' },
+                { title: 'h4', block: 'h4' },
+                { title: 'h5', block: 'h5' },
+                { title: 'h6', block: 'h6' }
+            ]
+        },
+
+        {
+            title: 'Blocks', items: [
+                { title: 'p', block: 'p' },
+                { title: 'div', block: 'div' },
+                { title: 'pre', block: 'pre' }
+            ]
+        },
+
+        {
+            title: 'Containers', items: [
+                { title: 'section', block: 'section', wrapper: true, merge_siblings: false },
+                { title: 'article', block: 'article', wrapper: true, merge_siblings: false },
+                { title: 'blockquote', block: 'blockquote', wrapper: true },
+                { title: 'hgroup', block: 'hgroup', wrapper: true },
+                { title: 'aside', block: 'aside', wrapper: true },
+                { title: 'figure', block: 'figure', wrapper: true }
+            ]
+        }
+        */
+    ];
 
     const image_prepend_url = 'https://sistemas.jaraguadosul.sc.gov.br/';
 
     const menubar = '';
 
-    const plugins = ['autoresize', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor',
+    const plugins = ['template', 'autoresize', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor',
         'pagebreak', 'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
-        'media', 'table', 'emoticons'
+        'media', 'table', 'emoticons', 'anchor'
     ];
 
-    const toolbar = [
-        'styles | fontfamily fontsize | lineheight| forecolor backcolor | bold italic underline | alignleft aligncenter alignright alignjustify | ' +
-        'bullist numlist outdent indent | link image media | table | removeformat | fullscreen preview | pagebreak'
+    const toolbar = ['styles | fontfamily fontsize | lineheight| forecolor backcolor | bold italic underline | alignleft aligncenter alignright alignjustify | ' +
+        'bullist numlist outdent indent | link image media | table | removeformat | fullscreen preview | pagebreak | anchor code template'
     ];
 
 
@@ -25,8 +69,6 @@
     /**
      * Funções
      */
-
-
     function ttinymceeditor_enable_field(form_name, field) {
         console.log('ttinymceeditor_enable_field');
         setTimeout(function () { $('form[name=' + form_name + '] [name=' + field + ']').next().find('.note-editable').attr('contenteditable', true); }, 1);
@@ -62,22 +104,35 @@
 
 
     function ttinymceeditor_set_image_list(objects) {
-        console.log('ttinymceeditor_editor_set_image_list');
+        console.log('ttinymceeditor_set_image_list');
         image_list = objects;
     }
 
+    function ttinymceeditor_set_template_list(objects) {
+        console.log('ttinymceeditor_set_template_list');
+        console.log(objects);
+        template_list = objects;
+    }
 
     function ttinymceeditor_set_card_items(objects) {
-        console.log('ttinymceeditor_editor_set_card_items');
+        console.log('ttinymceeditor_set_card_items');
         card_items = objects;
     }
 
+    function ttinymceeditor_set_height(value) {
+        console.log('ttinymceeditor_set_height: ' + value);
+        
+        height = value;
+        /*tinymce.activeEditor.execCommand('mceAutoResize');*/
+    }    
 
     function ttinymceeditor_start(objectId, width = 800, height = 600, lang, options, buttons) {
         console.log('ttinymceeditor_start: ' + objectId + ' lang: ' + lang);
 
         tinymce.init({
             selector: 'textarea#' + objectId,
+            style_formats: style_formats,
+            style_formats_merge: true,
             skin: 'oxide',
             content_css: 'document',
             language: lang,
@@ -87,21 +142,66 @@
             force_br_newlines: true,
             plugins: plugins,
             toolbar: toolbar,
-            min_height: 200,
-            max_height: 600,
+
+            min_height: 500,
+            max_height: 800,
             min_width: 400,
+    
             height: height,
             width: width,
+            resize: false,
+            
+            content_css: 'vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/ttinymceeditor.css', 
+
+            visualblocks_default_state: true,
+            end_container_on_empty_block: true,
+
+
             image_list: image_list,
+
+            image_title: true,
+            automatic_uploads: true,
+            file_picker_types: 'image',
+            file_picker_callback: function (cb, value, meta) {
+                var input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+
+                input.onchange = function () {
+                    var file = this.files[0];
+
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        var id = 'blobid' + (new Date()).getTime();
+                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                        var base64 = reader.result.split(',')[1];
+                        var blobInfo = blobCache.create(id, file, base64);
+                        blobCache.add(blobInfo);
+                        cb(blobInfo.blobUri(), { title: file.name });
+                    };
+                    reader.readAsDataURL(file);
+                };
+
+                input.click();
+            },
+
+
             content_style: 'td p { margin: 5px; line-height: 1};',
+            /*
+            autoresize_min_height: 200,
+            autoresize_max_height: 800,
             autoresize_overflow_padding: 50,
             autoresize_bottom_margin: 50,
+            
+            */
+            templates: template_list,
+            elementpath: false,
             table_default_attributes: {
                 border: '1'
             },
             image_prepend_url: image_prepend_url,
             init_instance_callback: function () {
-                $('head').append('<style> .mce-tooltip{ display: none; } </style>');
+                $('head').append('<style> .mce-tooltip{ display: none !important; } </style>');
             },
             setup: (editor) => {
                 const onAction = (autocompleteApi, rng, value) => {

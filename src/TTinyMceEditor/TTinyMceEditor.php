@@ -20,6 +20,7 @@ use Adianti\Widget\Util\TImage;
  * @author     Marcelo Barreto Nees <marcelo.linux@gmail.com>
  */
 class TTinyMceEditor extends TField implements AdiantiWidgetInterface
+// class TTinyMceEditor extends TField
 {
     protected $id;
     protected $size;
@@ -32,6 +33,7 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
 
     protected $card_items;
     protected $image_list;
+    protected $template_list;
 
 
     /**
@@ -44,13 +46,15 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
 
         TPage::include_js('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/tinymce.min.js');
         TPage::include_js('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/ttinymceeditor.js');
+        TPage::include_css('vendor/marcelonees/ttinymceadianti/src/TTinyMceEditor/ttinymceeditor.css');
 
         $this->id               = 'TTinyMceEditor_' . mt_rand(1000000000, 1999999999);
         $this->toolbar          = true;
         $this->options          = [];
         $this->customButtons    = [];
-        $this->card_items       = [];
-        $this->image_list       = [];
+        $this->card_items       = '';
+        $this->image_list       = '';
+        $this->template_list    = '';
 
         // creates a tag
         $this->tag = new TElement('textarea');
@@ -97,27 +101,6 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
     //     ];
     // }
 
-    // /**
-    //  * Define the widget's size
-    //  * @param  $width   Widget's width
-    //  * @param  $height  Widget's height
-    //  */
-    // public function setSize($width, $height = NULL)
-    // {
-    //     $this->size   = $width;
-    //     if ($height) {
-    //         $this->height = $height;
-    //     }
-    // }
-
-    // /**
-    //  * Returns the size
-    //  * @return array(width, height)
-    //  */
-    // public function getSize()
-    // {
-    //     return array($this->size, $this->height);
-    // }
 
     // /**
     //  * Disable toolbar
@@ -200,6 +183,15 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
         TScript::create(" ttinymceeditor_set_image_list($image_list)");
     }
 
+    /**
+     * Set template_list
+     * @param $template_list Json Object
+     */
+    public function setTemplateList($template_list)
+    {
+        $this->template_list = $template_list;
+        TScript::create(" ttinymceeditor_set_template_list($template_list)");
+    }
 
     /**
      * Insert text
@@ -214,10 +206,43 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
 
 
     /**
+     * Define the widget's size
+     * @param  $width   Widget's width
+     * @param  $height  Widget's height
+     */
+    public function setSize($width, $height = NULL)
+    {
+        $this->size = $width;
+        if ($height) {
+            $this->height = $height;
+            TScript::create(" ttinymceeditor_set_height($height); ");
+        }
+    }
+
+    /**
+     * Returns the size
+     * @return array(width, height)
+     */
+    public function getSize()
+    {
+        return array($this->size, $this->height);
+    }
+
+
+    /**
      * Show the widget
      */
     public function show()
     {
+        $style = new TElement('style');
+        // $style->add('#' . $this->id . '{ height:' . $this->height . ';  width: ' . $this->width . '; }');
+        $style->add("
+            #$this->id { 
+                height: $this->height;
+                width: $this->width; 
+            }
+        ");
+
         $this->tag->{'id'}    = $this->id;
         $this->tag->{'class'} = 'ttinymceeditor';    // CSS
         $this->tag->{'name'}  = $this->name;         // tag name
@@ -265,6 +290,9 @@ class TTinyMceEditor extends TField implements AdiantiWidgetInterface
 
         // Lista de imagens disponíveis em Inserir/Editar imagem
         TScript::create(" ttinymceeditor_set_image_list({$this->image_list})");
+
+        // Lista de templates disponíveis
+        TScript::create(" ttinymceeditor_set_template_list({$this->template_list})");
 
         // Mostra o editor na tela
         TScript::create(" $('#{$this->tag->id}').parent().show();");
